@@ -8,3 +8,5 @@ $dbconfig['db_username'] = 'root';
 $dbconfig['db_password'] = 'vtiger';
 $dbconfig['db_name'] = 'extracker';
 $dbconfig['db_type'] = 'mysql';
+$dbconfig['db_hostname'] = $dbconfig['db_server'].$dbconfig['db_port'];
+

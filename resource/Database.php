@@ -69,16 +69,15 @@ class DataBase {
 	}
 
 	static function &getInstance() {
-		global $adb, $log;
+		global $dbObject;
 
-		if (!isset($adb)) {
-			$adb = new self();
+		if (!isset($dbObject)) {
+			$dbObject = new self();
 		}
-		return $adb;
+		return $dbObject;
 	}
 
 	function checkConnection() {
-		global $log;
 
 		if (!isset($this->database)) {
 			$this->connect(false);
@@ -97,7 +96,6 @@ class DataBase {
 	}
 
 	function getRowCount(&$result) {
-		global $log;
 		if (isset($result) && !empty($result))
 			$rows = $result->RecordCount();
 		return $rows;
@@ -141,10 +139,11 @@ class DataBase {
 
 	function pquery($sql, $params = array(), $dieOnError = false, $msg = '') {
 		$this->checkConnection();
+		$date = getdate();
 		$sql_start_time = microtime(true);
 		$result = &$this->database->Execute($sql, $params);
 		$sql_end_time = microtime(true);
-		file_put_contents('databaseExecutedLog.log', print_r($sql . ' startTime = ' . $sql_start_time . ' endTime = ' . $sql_end_time, true), FILE_APPEND);
+		file_put_contents('databaseExecutedLog.log', print_r('query executed = '.$sql .' date = '.$date. ' startTime = ' . $sql_start_time . ' endTime = ' . $sql_end_time, true), FILE_APPEND);
 		if (!$result)
 			$this->checkError($msg . ' Query Failed:' . $sql . '::', $dieOnError);
 
