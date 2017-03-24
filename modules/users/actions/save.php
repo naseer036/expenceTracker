@@ -1,7 +1,9 @@
 <?php
 
 //class to save a new user
-class users_save extends basic_save{
+class users_save extends basic_action {
+
+	private $tablename = 'users';
 
 	function __construct() {
 		parent::__construct();
@@ -9,20 +11,24 @@ class users_save extends basic_save{
 
 	public function process($request) {
 		global $dbObject;
-		$userName = $request['user_name'];
+		$inserValues = array();
+		array_push($inserValues, $request['user_name']);
 		//password will be recieved from user in plain text for now.
-		$userPassword = $request['user_password'];
-		$saveQuery = 'INSERT INTO users values (?,?)';
-		$params = array($categoryId,$userName,$userPassword);
-		$result = $dbObject->pquery($saveQuery,$params);
-		if(!$result){
+		array_push($inserValues, $request['user_password']);
+		$saveQueryAndParams = $this->queryBuilder($inserValues,'insert', $this->tablename);
+		$result = $dbObject->pquery($saveQueryAndParams[0], $saveQueryAndParams[1]);
+		if (!$result) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	//to be used if encryption is going to be used
-	private function decript($encryptedPassword){
+	private function decript($encryptedPassword) {
+		
+	}
+
+	private function encript() {
 		
 	}
 

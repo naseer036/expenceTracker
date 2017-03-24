@@ -1,11 +1,8 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-class expence_save extends basic_save{
+class expence_save extends basic_action {
+
+	public $tabelName = 'expence';
 
 	function __construct() {
 		parent::__construct();
@@ -13,16 +10,16 @@ class expence_save extends basic_save{
 
 	public function process($request) {
 		global $dbObject;
-		$expenceName = $request['expence_name'];
-		$expenceDescription = $request['expence_desc'];
-		$expenceSubject = $request['expence_subject'];
-		$expenceCategoryId = $request['catagory_id'];
-		$expenceUserId = $request['user_id'];
-		$expenceValue = $request['value'];
-		$saveQuery = 'INSERT INTO expence values (?,?,?,?,?,?)';
-		$params = array($expenceName,$expenceDescription,$expenceSubject,$expenceCategoryId,$expenceUserId,$expenceUserId,$expenceValue);
-		$result = $dbObject->pquery($saveQuery,$params);
-		if(!$result){
+		$inserValues = array();
+		array_push($inserValues, $request['expence_name']);
+		array_push($inserValues, $request['expence_desc']);
+		array_push($inserValues, $request['expence_subject']);
+		array_push($inserValues, $request['catagory_id']);
+		array_push($inserValues, $request['user_id']);
+		array_push($inserValues, $request['value']);
+		$saveQueryAndParams = $this->queryBuilder($inserValues, 'insert', $this->tablename);
+		$result = $dbObject->pquery($saveQueryAndParams[0], $saveQueryAndParams[1]);
+		if (!$result) {
 			return false;
 		}
 		return true;

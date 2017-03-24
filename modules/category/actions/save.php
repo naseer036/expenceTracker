@@ -1,23 +1,21 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-class category_save extends basic_save{
+class category_save extends basic_action {
+
+	public $tabelName = 'category';
+
 	function __construct() {
 		parent::__construct();
 	}
 
 	public function process($request) {
 		global $dbObject;
-		$categoryName = $request['category_name'];
-		$categoryDescription = $request['category_desc'];
-		$saveQuery = 'INSERT INTO category values (?,?,?)';
-		$params = array($categoryId,$categoryName,$categoryDescription);
-		$result = $dbObject->pquery($saveQuery,$params);
-		if(!$result){
+		$inserValues = array();
+		array_push($inserValues, $request['category_name']);
+		array_push($inserValues, $request['category_desc']);
+		$saveQueryAndParams = $this->queryBuilder($inserValues, 'insert', $this->tablename);
+		$result = $dbObject->pquery($saveQueryAndParams[0], $saveQueryAndParams[1]);
+		if (!$result) {
 			return false;
 		}
 		return true;
